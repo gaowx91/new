@@ -1,0 +1,1 @@
+.cell-left{flex-shrink:0;-webkit-flex-shrink:0}.cell figure{display:-webkit-flex;display:flex;margin:0 0 0.4rem;padding:0.266667rem 0.4rem;background-color:#fff;overflow:hidden;position:relative}.cell figcaption{overflow:hidden;padding:0.266667rem}.cell-padded{background:#fff;padding:.4rem;margin:0 0 .4rem;display:block}

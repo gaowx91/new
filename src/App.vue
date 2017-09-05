@@ -1,0 +1,41 @@
+<template>
+    <div class="app" id="app">
+        <loading v-show="loading" :loading='loading'></loading>
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+    </div>
+</template>
+<script>
+import 'mint-ui/lib/style.css'
+import '../static/css/app.css';
+import loading from './components/loading/loading'
+export default {
+    name: 'app',
+    data() {
+        return {
+            loading: false
+        }
+    },
+    components: {
+        loading
+    },
+    watch: {
+    },
+    methods: {
+        toggleLoading(show = true) {
+            this.loading = show
+        },
+        fakeAjax() {
+            this.toggleLoading(true)
+            setTimeout(() => {
+                this.toggleLoading(false)
+            }, 1000)
+        }
+    },
+    mounted() {
+        this.fakeAjax()
+    }
+}
+
+</script>

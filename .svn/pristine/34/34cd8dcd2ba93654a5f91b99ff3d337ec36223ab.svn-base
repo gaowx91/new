@@ -1,0 +1,20 @@
+<template>
+    <article class="content" :class="{'bottom':child,'content-padded':padded}">
+        <slot></slot>
+    </article>
+</template>
+<script>
+export default {
+    props:{
+        child:Boolean,padded:Boolean,
+    },
+    data() {
+      return {
+        wrapperHeight: 0
+      }
+    },
+    mounted() {
+    }
+}
+</script>
+

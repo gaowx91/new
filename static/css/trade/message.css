@@ -1,0 +1,86 @@
+/*
+* @Author: yuzm
+* @Date:   2017-07-27 10:53:03
+* @Last Modified by:   yuzm
+* @Last Modified time: 2017-09-04 15:53:33
+*/
+.radio-label+.radio-other {
+    background-image: -webkit-linear-gradient(top, #dbdbdb, #dbdbdb 50%, transparent 50%);
+    background-image: linear-gradient(180deg, #dbdbdb, #dbdbdb 50%, rgba(0, 0, 0, 0) 50%);
+    background-size: 120% 1px;
+    background-repeat: no-repeat
+}
+.page-ask {
+    font-size: 0.373333rem
+}
+.page-ask .hd {
+    margin: 0 0 0.4rem
+}
+.page-ask .ft {
+    padding: 0.4rem 0 0
+}
+.ask-check {
+    border: 1px solid #ddd;
+    margin: 0 0 0.266667rem;
+    -moz-border-radius: .13333rem;
+    -webkit-border-radius: .13333rem;
+    border-radius: .13333rem;
+    padding: 0.266667rem;
+    background: #fff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden
+}
+.ask-check input {
+    border: 0;
+    width: 2.4rem
+}
+.ask-check.is-selected {
+    border: 1px solid #ffa00e;
+    white-space: normal
+}
+.ask-check.is-selected .radio-label+.radio-other {
+    display: block
+}
+.ask-check.is-selected .mint-checkbox-core {
+    display: block
+}
+.ask-check.is-selected .radio-label {
+    padding-right: 20px
+}
+.ask-check .mint-checkbox-core {
+    display: none;
+    position: absolute;
+    right: 0;top: 0;background-color: #ffa00e;border-color: #ffa00e;
+}
+.ask-check .radio-label {
+    position: relative;display: block;
+}
+.ask-input {
+    display: -webkit-flex;
+    display: flex
+}
+.ask-input textarea {
+    height: 3.533333rem;
+    border: 0;
+    width: 100%;
+    padding: 0.266667rem;
+    -moz-border-radius: .13333rem;
+    -webkit-border-radius: .13333rem;
+    border-radius: .13333rem
+}
+.ask-input textarea:focus {
+    border: 0;
+    outline: none
+}
+.radio-label+.radio-other {
+    background-position: top;
+    margin: 0.266667rem 0 0;
+    padding: 0.266667rem 0 0;
+    text-align: center;
+    display: none
+}
+.radio-label+.radio-other input {
+    text-align: center;
+    outline: none
+}
