@@ -1,0 +1,170 @@
+{
+    "swipe": [{
+        "url": "goodsdetail",
+        "tit": "每日簽到",
+        "img": "static/images/banner/banner-1.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "點卡購買",
+        "img": "static/images/banner/banner.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "手遊專區",
+        "img": "static/images/banner/banner-1.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "手遊專區",
+        "img": "static/images/banner/banner.png"
+    }],
+    "entryNav": [{
+        "url": "",
+        "tit": "簽到",
+        "img": "static/images/nav/entry_nav_1.png"
+    }, {
+        "url": "",
+        "tit": "點數卡",
+        "img": "static/images/nav/entry_nav_2.png"
+    }, {
+        "url": "",
+        "tit": "手遊",
+        "img": "static/images/nav/entry_nav_3.png"
+    }, {
+        "url": "",
+        "tit": "紅利",
+        "img": "static/images/nav/entry_nav_4.png"
+    }, {
+        "url": "",
+        "tit": "奪寶",
+        "img": "static/images/nav/entry_nav_5.png"
+    }, {
+        "url": "",
+        "tit": "輕鬆遊",
+        "img": "static/images/nav/entry_nav_6.png"
+    }, {
+        "url": "",
+        "tit": "實物",
+        "img": "static/images/nav/entry_nav_7.png"
+    }, {
+        "url": "",
+        "tit": "便民",
+        "img": "static/images/nav/entry_nav_8.png"
+    }, {
+        "url": "",
+        "tit": "虛寶",
+        "img": "static/images/nav/entry_nav_9.png"
+    }, {
+        "url": "",
+        "tit": "代儲",
+        "img": "static/images/nav/entry_nav_10.png"
+    }],
+    "gamePc": [{
+        "url": "goodsdetail",
+        "tit": "每日簽到",
+        "img": "static/images/pc/pc_5.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "點卡購買",
+        "img": "static/images/pc/pc_6.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "手遊專區",
+        "img": "static/images/pc/pc_7.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "紅利商城",
+        "img": "static/images/pc/pc_8.png"
+    }],
+    "gameCard": [{
+        "url": "goodsdetail",
+        "tit": "MY CARD",
+        "img": "static/images/card/card_10.jpg"
+    }, {
+        "url": "goodsdetail",
+        "tit": "GASH",
+        "img": "static/images/card/card_11.jpg"
+    }, {
+        "url": "goodsdetail",
+        "tit": "華儀WGS卡",
+        "img": "static/images/card/card_10.jpg"
+    }, {
+        "url": "goodsdetail",
+        "tit": "普雷卡",
+        "img": "static/images/card/card_11.jpg"
+    }, {
+        "url": "goodsdetail",
+        "tit": "A卡（香港）",
+        "img": "static/images/card/card_10.jpg"
+    }, {
+        "url": "goodsdetail",
+        "tit": "HEAT Project",
+        "img": "static/images/card/card_11.jpg"
+    }],
+    "gameSy": [{
+        "url": "goodsdetail",
+        "tit": "龍之谷",
+        "img": "static/images/sy/sy_1.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "傳說對決",
+        "img": "static/images/sy/sy_2.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "陰陽師",
+        "img": "static/images/sy/sy_3.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "NBA LIVE",
+        "img": "static/images/sy/sy_4.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "托蘭異世錄",
+        "img": "static/images/sy/sy_5.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "創世破曉",
+        "img": "static/images/sy/sy_6.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "白貓tennis",
+        "img": "static/images/sy/sy_7.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "貓咪大戰爭",
+        "img": "static/images/sy/sy_8.png"
+    }, {
+        "url": "goodsdetail",
+        "tit": "Fate GO",
+        "img": "static/images/sy/sy_9.png"
+    }],
+    "gameDetail": [{
+        "url": "goodsdetail",
+        "tit": "Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網",
+        "txt": "谷歌卡(香港)／500點",
+        "img": "static/images/game/game_1.png",
+        "money": 452.56,
+        "bonus": 9000,
+        "type": "點數卡",
+        "stock": 100,
+        "recm": false
+    }, {
+        "url": "goodsdetail",
+        "tit": "steam點數卡(港幣) 1000港幣 ★steam點數卡(港幣) 1000港幣 ★",
+        "txt": "steam點數卡(香港) ／1000點",
+        "img": "static/images/game/game_2.png",
+        "money": 89299.82,
+        "bonus": 18000,
+        "type": "點數卡",
+        "stock": 50,
+        "recm": true
+    }, {
+        "url": "goodsdetail",
+        "tit": "Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網",
+        "txt": "谷歌卡(香港)／500點",
+        "img": "static/images/game/game_1.png",
+        "money": 452.56,
+        "bonus": 9000,
+        "type": "點數卡",
+        "stock": 9999,
+        "recm": false
+    }]
+}

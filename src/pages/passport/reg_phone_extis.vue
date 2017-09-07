@@ -1,0 +1,42 @@
+
+<template>
+    <div class="wrapper">
+        <v-Header child>
+            <div class="mod-header reg-header" slot="con">
+                <i class="mintui mintui-back" @click="$router.go(-1)"></i>
+                <div class="title">
+                    快速註冊
+                </div>
+            </div>
+        </v-Header>
+        <v-Content class="reg-content">
+            <form class="reg-form bound">
+                <span class="tit">該手機號碼已被以下帳戶綁定</span>
+                <img src="static/images/passport/avatar_1.png" alt="">
+                <span class="name">an****ty</span>
+                <span class="txt">請確認該帳號是否為你本人所有</span>
+                <div class="reg-submit">
+                    <router-link to="userlogin">
+                        <mt-button type="primary" size="large" plain>是我的帳號，立即登入</mt-button>
+                    </router-link>
+                    <!-- <router-link to=""> -->
+                        <mt-button type="primary" size="large" @click="$router.go(-1)">不是我的，換個手機號碼綁定</mt-button>
+                    <!-- </router-link> -->
+                </div>
+            </form>
+        </v-Content>
+    </div>
+</template>
+<script>
+import vContent from '../../components/content'
+import vHeader from '../../components/header'
+export default {
+    components: {
+        vContent,vHeader
+    },
+    mounted(){
+        this.overScroll();
+    }
+}
+</script>
+

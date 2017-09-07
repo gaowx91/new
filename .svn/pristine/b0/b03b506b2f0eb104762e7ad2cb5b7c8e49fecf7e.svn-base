@@ -1,0 +1,133 @@
+<template>
+    <div class="input-group" :class="{selected,'iserror':required}">
+        <div class="input-group-main">
+            <div class="input-group-wrapper">
+                <v-Panel v-if="toggle" :tit="toggletit" :txt="toggletxt">
+                    <div class="line" v-model="toggleInfo"></div>
+                    <div class="input-group-inner" v-model="toggleInfo">
+                        <div class="input-group-addon">
+                            <i :class="'first icon icon-'+icon"></i>
+                        </div>
+                        <div class="input-group-value">
+                            <input v-if="type === 'password'" type="password" :placeholder="placeholder" :id="id" ref="typeChange" @focus="handleToggleFocus" @blur="handleToggleBlur" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :minlength="minlength" :autocomplete="autoComplete" :autofocus="autofocus">
+                            <input :type="type" :placeholder="placeholder" :id="id" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :minlength="minlength" :autocomplete="autoComplete" :autofocus="autofocus" @focus="handleToggleFocus" @blur="handleToggleBlur" v-else>
+                            <i class="last icon icon-warning-circle-sign" v-if="state"></i>
+                            <i :class="'last icon icon-eyes-'+checkIcon" v-model="eyesToggle" @click="SeePassword" v-if="type === 'password'"></i>
+                        </div>
+                    </div>
+                </v-Panel>
+                    <div class="input-group-inner" v-model="toggleInfo" v-else>
+                        <div class="input-group-addon">
+                            <i :class="'first icon icon-'+icon"></i>
+                        </div>
+                        <div class="input-group-value">
+                            <input type="password" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :minlength="minlength" :autocomplete="autoComplete" :autofocus="autofocus" :id="id" @focus="handleFocus" @blur="handleBlur" v-if="type === 'password'" ref="typeChange">
+                            <input :type="type" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :minlength="minlength" :autocomplete="autoComplete" :autofocus="autofocus" :id="id" @focus="handleFocus" @blur="handleBlur" v-else>
+                            <i class="last icon icon-warning-circle-sign" v-if="state"></i>
+                            <i :class="'last icon icon-eyes-'+checkIcon" v-model="eyesToggle" @click="SeePassword" v-if="type === 'password'"></i>
+                        </div>
+                    </div>
+            </div>
+            <div class="input-group-other" v-if="other">
+                <slot></slot>
+            </div>
+        </div>
+        <div class="input-group-prompt" v-if="prompt">
+            {{message}}
+        </div>
+    </div>
+</template>
+<script>
+import vPanel from '../../panel'
+require("#/css/components/inputgroup.css")
+export default {
+    name:'inputgroup',
+    props: {
+        other: false,
+        message: {
+            type: String,
+            default: ''
+        },
+        icon: String,
+        id: String,
+        no: String,
+        placeholder: String,
+        state: false,
+        info: true,
+        type: {
+            type: String,
+            default: 'text'
+        },
+        toggle: true,
+        prompt: false,
+        required: false,
+        disabled: Boolean,
+        readonly: Boolean,
+        maxlength: Number,
+        minlength: Number,
+        autoComplete: {
+            type: String,
+            default: 'off'
+        },
+        autofocus: Boolean,
+        toggletit: {
+            type: String,
+            default: '設定支付密碼'
+        },
+        toggletxt: {
+            type: String,
+            default: '（默認支付密碼為登入密碼）'
+        }
+    },
+    data() {
+        return {
+            selected: '',
+            iserror: '',
+            toggleInfo: true,
+            checkIcon: 'closed',
+            eyesToggle: false,
+            typeChange: 'password',
+        }
+    },
+    watch: {
+        'value' (curVal, oldVal) {　　　
+            this.value = curVal;　　　　　　
+        },
+    },
+    methods: {
+        SeePassword(event) {
+            (this.eyesToggle = !this.eyesToggle) ? (this.$refs.typeChange.type = "text", this.checkIcon = "look") : (this.$refs.typeChange.type = "password", this.checkIcon = "closed");
+
+            this.$nextTick(function(){
+
+            })
+        },
+        handleFocus() {
+            this.commonFocus();
+        },
+        handleBlur(event) {
+            this.commonBlur();
+        },
+        commonFocus() {
+            var _this = this;
+            _this.selected = 'selected';
+            _this.iserror = '';
+        },
+        commonBlur() {
+            var _this = this;
+            _this.selected = '';
+            const value = event.currentTarget.value;
+            _this.$emit('change', value);
+        },
+        handleToggleFocus(event) {
+            this.commonFocus();
+        },
+        handleToggleBlur(event) {
+            this.commonBlur();
+        }
+    },
+    components: {
+        vPanel
+    }
+}
+</script>

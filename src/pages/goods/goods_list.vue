@@ -1,0 +1,222 @@
+<template>
+    <div class="wrapper">
+        <v-Header>
+            <div class="mod-header">
+                <i class="mintui mintui-back" @click="$router.go(-1)"></i>
+                <div class="title">
+                    <div class="mod-searchbar">
+                        <i class="mintui mintui-search"></i> 輸入搜尋關鍵字
+                    </div>
+                </div>
+                <span class="is-right">
+                <img src="static/images/common/menu.png" alt="">
+                </span>
+            </div>
+            <ul class="g-currency">
+                <li @click="popupVisible4 = true"><span class="w200">{{currencyCn}}<span class="text-muted">{{currencyEn}}</span></span>
+                </li>
+                <li @click="popupVisible5 = true"><span class="w200">{{goodsResult}}</span></li>
+            </ul>
+        </v-Header>
+        <v-Content class="g-wrapper">
+            <v-CellBox>
+                <div class="mod-goods-list">
+                    <v-Cell :to="item.url" v-for="(item,index) in gameDetail" :key="index">
+                        <div slot='left' class="cell-left">
+                            <!-- <span class="tag" v-if="item.recm">推薦</span> -->
+                            <img v-lazy="item.img" class="my-avatar">
+                        </div>
+                        <div class="row hd">
+                            <span class="badge badge-primary badge-min">{{item.type}}</span>
+                            <span class="tit">{{item.tit}}</span>
+                        </div>
+                        <div class="row md">{{item.txt}}</div>
+                        <div class="row bd">
+                            <span class="text-default"><span class="text-danger money">{{item.money}}</span><span>RMB</span></span>
+                            <span class="text-muted">紅利:{{item.bonus}}</span>
+                            <!-- <span>庫存:{{item.stock}}</span> -->
+                        </div>
+                    </v-Cell>
+                </div>
+            </v-CellBox>
+        </v-Content>
+
+             <mt-popup v-model="popupVisible4" position="bottom" class="mint-popup-4 popup-select">
+            <div class="popup-bar">
+                <mt-button type="primary" @click="popupVisible4 = false">取消</mt-button>
+                <mt-button type="danger" @click="currencyHandle">確認</mt-button>
+            </div>
+            <mt-picker :slots="currencySlots" @change="currencyChange" :visible-item-count="3"></mt-picker>
+        </mt-popup>
+        <mt-popup v-model="popupVisible5" position="bottom" class="mint-popup-4 popup-select">
+            <div class="popup-bar">
+                <mt-button type="primary" @click="popupVisible5 = false">取消</mt-button>
+                <mt-button type="danger" @click="goodsHandle">確認</mt-button>
+            </div>
+            <mt-picker :slots="goodsSlots" @change="goodsTypeChange" :visible-item-count="3"></mt-picker>
+        </mt-popup>
+    </div>
+</template>
+<script>
+import '#/css/goods/goods_list.css'
+import vContent from '../../components/content'
+import vCellBox from '../../components/box'
+import vCell from '../../components/cell'
+import vHeader from '../../components/header'
+const currency = {
+    '台幣TWD': [],
+    '人民幣RMB': [],
+    '港幣HKD': [],
+};
+const goodstype = {
+    '所有物品': [],
+    '遊戲幣': [],
+    '道具': [],
+    '帳號': [],
+    '點數卡': [],
+    '代練': [],
+    '商城道具': [],
+    '送禮': [],
+    '其他': [],
+    '代儲': [],
+    '產包': [],
+};
+export default {
+    data() {
+        return {
+            currencySlots: [{
+                flex: 1,
+                values: Object.keys(currency),
+                className: 'slot1',
+                textAlign: 'center'
+            }],
+            goodsSlots: [{
+                flex: 1,
+                values: Object.keys(goodstype),
+                className: 'slot1',
+                textAlign: 'center'
+            }],
+            currencyCn: '台幣',
+            currencyValue: '',
+            currencyEn: 'TWD',
+            goodsResult: '所有物品',
+            goodsValue: '',
+            popupVisible4: false,
+            popupVisible5: false,
+            gameDetail: [{
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '100',
+                recm: false
+            }, {
+                url: '/goodsdetail',
+                tit: 'steam點數卡(港幣) 1000港幣 ★steam點數卡(港幣) 1000港幣 ★',
+                txt: 'steam點數卡(香港) ／1000點',
+                img: 'static/images/game/game_2.png',
+                money: '89299.82',
+                bonus: '18000',
+                type: '點數卡',
+                stock: '50',
+                recm: true
+            }, {
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '9999',
+                recm: false
+            }, {
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '9999',
+                recm: false
+            }, {
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '9999',
+                recm: false
+            }, {
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '9999',
+                recm: false
+            }, {
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '9999',
+                recm: false
+            }, {
+                url: '/goodsdetail',
+                tit: 'Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網Google play谷歌卡( 500點 ★網',
+                txt: '谷歌卡(香港)／500點',
+                img: 'static/images/game/game_1.png',
+                money: '452.56',
+                bonus: '9000',
+                type: '點數卡',
+                stock: '9999',
+                recm: false
+            }]
+        }
+    },
+    methods: {
+        currencyHandle() {
+            this.popupVisible4 = false;
+            this.currencyCn = this.currencyValue.replace(/[a-zA-Z]/g, '');
+            this.currencyEn = this.currencyValue.replace(/[\u4e00-\u9fa5]/gm, "")
+        },
+        goodsHandle() {
+            this.popupVisible5 = false;
+            this.goodsResult = this.goodsValue;
+        },
+        currencyChange(picker, values) {
+            picker.setSlotValues(1, currency[values[0]]);
+            this.currencyValue = values[0];
+        },
+        open(picker) {
+            this.$refs[picker].open();
+        },
+        goodsTypeChange(picker, values) {
+            picker.setSlotValues(1, goodstype[values[0]]);
+            this.goodsValue = values[0];
+        },
+    },
+    components: {
+        vContent,
+        vHeader,
+        vCell,
+        vCellBox
+    },
+    mounted(){
+        this.overScroll();
+    }
+}
+
+</script>

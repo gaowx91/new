@@ -1,0 +1,120 @@
+<template>
+    <div class="wrapper">
+        <v-Header child>
+            <div class="mod-header" slot="con">
+                <i class="mintui mintui-back" @click="$router.go(-1)"></i>
+                <div class="title">
+                    立即購買
+                </div>
+            </div>
+        </v-Header>
+        <v-Content>
+            <v-CellBox>
+                <div class="buy">
+                    <v-Cell box>
+                        <div slot='left' class="cell-left">
+                            <img src="static/images/game/game_1.png" class="my-avatar">
+                        </div>
+                        <div class="hd">
+                            <span class="badge badge-primary badge-min ">點數卡</span>
+                            <span class="tit">Mycard 1150點█〓█★殺更大★█〓█★保字號★24小時自動發卡★7-11超商儲值咨詢★</span>
+                        </div>
+                        <div class="row md">
+                            <span class="text-default"><span class="text-danger">99999.00</span><span>TWD</span></span>
+                        </div>
+                    </v-Cell>
+                </div>
+            </v-CellBox>
+            <ul class="mod-buy-list" v-if="type==0">
+                <li>
+                    <span class="dt">點數卡名稱<span class="text-danger">*</span>
+                    </span>
+                    <span>Mycard點數卡</span>
+                </li>
+                <li>
+                    <span class="dt">物品種類<span class="text-danger">*</span></span>
+                    <span>點數卡</span>
+                </li>
+                <li>
+                    <span class="dt">點數卡面額<span class="text-danger">*</span></span>
+                    <span>1150點</span>
+                </li>
+                <li>
+                    <span class="dt">購買數量</span>
+                    <div class="choose-amount m-b-20">
+                        <a class="btn-reduce" id="reduce" href="javascript:;"></a>
+                        <input id="number" type="text" value="1">
+                        <a class="btn-add" id="add" href="javascript:;"></a>
+                    </div>
+                </li>
+            </ul>
+            <ul class="mod-buy-list">
+                <li>
+                    <span class="dt">遊戲名稱<span class="text-danger">*</span>
+                    </span>
+                    <span>笑傲江湖</span>
+                </li>
+                <li>
+                    <span class="dt">伺服器<span class="text-danger">*</span></span>
+                    <span>S1沖靈劍法（紫霞神功）</span>
+                </li>
+                <li>
+                    <span class="dt">角色名<span class="text-danger">*</span></span>
+                    <input type="text" class="text-right input" placeholder="請輸入您的常用角色名">
+                </li>
+                <li>
+                    <span class="dt">角色等級<span class="text-danger">*</span></span>
+                    <input type="text" class="text-right input" placeholder="請輸入您的角色等級">
+                </li>
+                <li class="vertical">
+                    <span class="dt">角色描述<span class="text-danger">*</span></span>
+                    <textarea type="text" class="textarea" placeholder="限制20個字符，您可以填寫您的角色性別，職業等等..."></textarea>
+                </li>
+                <li>
+                    <span class="dt">購買數量</span>
+                    <div class="choose-amount">
+                        <a class="btn-reduce disabled" id="reduce" href="javascript:;"></a>
+                        <input id="number" type="text" value="1">
+                        <a class="btn-add" id="add" href="javascript:;"></a>
+                    </div>
+                </li>
+            </ul>
+        </v-Content>
+        <vFooter>
+            <div class="action-bar" slot="detail">
+                <span class="total cell">
+                合計：<span class="text-danger fz30">999998.00</span>
+                <span class="text-muted">元</span>
+                </span>
+                <router-link to="" class="buy cell">確認購買</router-link>
+            </div>
+        </vFooter>
+    </div>
+</template>
+<script>
+import '#/css/goods/goods_tobuy.css'
+import vContent from '../../components/content'
+import vFooter from '../../components/footer'
+import vHeader from '../../components/header'
+import VCellBox from '../../components/box'
+import VCell from '../../components/cell'
+export default {
+    data() {
+        return {
+            type: 1
+        }
+    },
+    components: {
+        vContent,
+        vHeader,
+        vFooter,
+        VCellBox,
+        VCell
+    },
+    mounted(){
+        this.overScroll();
+    }
+}
+
+</script>
+

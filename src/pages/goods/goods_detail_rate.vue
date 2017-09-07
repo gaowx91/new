@@ -1,0 +1,121 @@
+<template>
+    <div class="wrapper">
+        <v-Header>
+            <div class="mod-header mod-header-detail" slot="detail-header" id="mod-header">
+                <i class="mintui mintui-back" @click="$router.go(-1)"></i>
+                <mt-navbar class="tab-navbar title" v-model="selected">
+                    <router-link to="goodsDetail">商品</router-link>
+                    <router-link to="goodsdetailrate" class="is-selected">評價</router-link>
+                    <router-link to="goodsdetailqalist">問與答</router-link>
+                </mt-navbar>
+                <span class="is-right">
+                <img src="static/images/common/menu.png" alt="">
+                </span>
+            </div>
+            <mt-navbar class="subtab-navbar" v-model="selected">
+                <mt-tab-item id="1">
+                    <span class="txt">所有評價</span>
+                </mt-tab-item>
+                <mt-tab-item id="2">
+                    <span class="txt"><img src="static/images/common/hp.png" alt="">正評</span>
+                </mt-tab-item>
+                <mt-tab-item id="3">
+                    <span class="txt"><img src="static/images/common/zp.png" alt="">中評</span>
+                </mt-tab-item>
+                <mt-tab-item id="4">
+                    <span class="txt"><img src="static/images/common/cp.png" alt="">差評</span>
+                </mt-tab-item>
+            </mt-navbar>
+        </v-Header>
+        <v-Content>
+            <mt-tab-container v-model="selected">
+                <mt-tab-container-item id="1">
+                    <ul class="list-rate">
+                        <li v-for="(item,index) in rate" :key="index" class="item">
+                            <h3 v-if="item.type==='1'" class="rate-content">
+                        <span class="text-success">
+                        <img src="static/images/common/hp.png" class="rate-type" alt="">正評：</span>{{item.content}}
+                        </h3>
+                            <h3 v-else-if="item.type==='2'" class="rate-content">
+                        <span class="text-primary">
+                        <img src="static/images/common/zp.png" class="rate-type" alt="">中評：</span>{{item.content}}
+                        </h3>
+                            <h3 v-else="item.type==='3'" class="rate-content">
+                        <span class="text-danger">
+                        <img src="static/images/common/cp.png" class="rate-type" alt="">差評：</span>{{item.content}}
+                        </h3>
+                            <div class="rate-info">
+                                <span><span class="text-muted">會員編號：</span>N0.{{item.nick}}</span>
+                                <span class="text-muted">{{item.time}}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </mt-tab-container-item>
+                <mt-tab-container-item id="2">
+                    3
+                </mt-tab-container-item>
+                <mt-tab-container-item id="3">
+                    2
+                </mt-tab-container-item>
+                <mt-tab-container-item id="4">
+                    1
+                </mt-tab-container-item>
+            </mt-tab-container>
+        </v-Content>
+        <v-Footer>
+            <div class="action-bar" slot="detail">
+                <router-link to="/goodslist" class="toshop cell">
+                    <img src="static/images/common/shop-bag.png" alt="">
+                    <span class="txt">賣家商品</span>
+                </router-link>
+                <router-link to="goodstobuy" class="buy cell">立即購買</router-link>
+            </div>
+        </v-Footer>
+    </div>
+</template>
+<script>
+import '#/css/goods/goods_detail_rate.css'
+import vBottom from '../../components/bottom'
+import vContent from '../../components/content'
+import vFooter from '../../components/footer'
+import vHeader from '../../components/header'
+export default {
+    name:'orderdetailrate',
+    data() {
+        return {
+            rate: [{
+                content: '尊的很棒！包邮包税，这价格真的很美丽，宝贝也挺好，日期很新鲜，口感脆脆的，有股麦香味，就是吃起来干了点',
+                time: '2017/7/13 23:01:10',
+                nick: '2****1',
+                type: '1'
+            }, {
+                content: '尊的很棒！包邮包税，这价格真的很美丽，宝贝也挺好，日期很新鲜，口感脆脆的，有股麦香味，就是吃起来干了点',
+                time: '2017/7/13 23:02:10',
+                nick: '2****2',
+                type: '2'
+            }, {
+                content: '尊的很棒！包邮包税，这价格真的很美丽，宝贝也挺好，日期很新鲜，口感脆脆的，有股麦香味，就是吃起来干了点',
+                time: '2017/7/13 23:03:10',
+                nick: '2****3',
+                type: '3'
+            }, {
+                content: '尊的很棒！包邮包税，这价格真的很美丽，宝贝也挺好，日期很新鲜，口感脆脆的，有股麦香味，就是吃起来干了点',
+                time: '2017/7/13 23:01:10',
+                nick: '2****1',
+                type: '1'
+            }],
+            selected: '1'
+        }
+    },
+    components: {
+        vContent,
+        vHeader,
+        vFooter,
+        vBottom
+    },
+    mounted(){
+        this.overScroll();
+    }
+}
+
+</script>

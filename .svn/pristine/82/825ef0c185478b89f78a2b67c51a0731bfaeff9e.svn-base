@@ -1,0 +1,1 @@
+.radio{display:-webkit-flex;display:flex;-webkit-justify-content:center;justify-content:center;-webkit-align-items:center;align-items:center}.radio.selected i{color:#feb900}.radio i{margin:0 0.066667rem 0 0}

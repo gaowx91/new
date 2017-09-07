@@ -1,0 +1,7 @@
+/*
+* @Author: yuzm
+* @Date:   2017-09-05 17:18:27
+* @Last Modified by:   yuzm
+* @Last Modified time: 2017-09-05 17:18:38
+*/
+.list-rate .item{background:#fff;padding:0.4rem;margin:0 0 0.4rem}.rate-info{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;margin:0.4rem 0 0}.rate-content{font-size:0.373333rem;font-weight:normal;color:#333;font-size:0.32rem}.rate-type{margin:-0.066667rem 0.133333rem 0 0;width:0.373333rem;height:0.4rem;vertical-align:middle}

@@ -1,0 +1,164 @@
+/*
+* @Author: yuzm
+* @Date:   2017-09-06 11:59:20
+* @Last Modified by:   yuzm
+* @Last Modified time: 2017-09-06 13:05:12
+*/
+.fb-cell .is-left:before, .fb-cell .is-left:after {
+    position: absolute;
+    display: block;
+    content: ''
+}
+.fb-cell {
+    margin: 0 0 0.266667rem
+}
+.fb-cell.selected figure {
+    color: #feb900;
+    border: 1px solid #feb900
+}
+.fb-cell.selected .is-left {
+    background: #feb900
+}
+.fb-cell.selected .is-left:before {
+    background: #feb900
+}
+.fb-cell.selected .is-left:after {
+    border: 0.13333rem solid #feb900
+}
+.fb-cell.selected .is-left .icon-hook, .fb-cell.selected .is-left .icon-add {
+    color: inherit
+}
+.fb-cell.selected .fb-cell-title .tit, .fb-cell.selected .fb-cell-title .txt {
+    color: inherit
+}
+.fb-cell figure {
+    margin: 0;padding: 0;
+    border: 1px solid #ddd;
+    background: #fff;    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.fb-cell .is-left {
+    width: 2.666667rem;
+    height: 3.066667rem;
+    background: #ccc;
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position: relative;
+    margin-right: 0.8rem
+}
+.fb-cell .is-left:before {
+    width: 100%;
+    height: 145%;
+    -moz-border-radius: 0 50% 50% 0;
+    -webkit-border-radius: 0;
+    border-radius: 0 50% 50% 0;
+    right: -0.533333rem;
+    background: #ccc;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    z-index: 0
+}
+.fb-cell .is-left:after {
+    width: 0.8rem;
+    height: 0.8rem;
+    -moz-border-radius: 50% 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50% 50%;
+    right: -0.4rem;
+    background: #ccc;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    z-index: 1;
+    background: #fff;
+    border: 0.133333rem solid #ccc;
+    margin-right: -0.53333rem
+}
+.fb-cell .is-left .icon-user-man {
+    font-size: 2.133333rem;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+    margin-left: 0.266667rem
+}
+.fb-cell .is-left .icon-add, .fb-cell .is-left .icon-hook {
+    font-size: 0.466667rem;
+    color: #ccc;
+    position: absolute;
+    z-index: 2;
+    right: -0.633333rem;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%)
+}
+.fb-cell-title {
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    padding: 0.466667rem 0.466667rem 0.266667rem;
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -webkit-align-items: center;
+    align-items: center
+}
+.fb-cell-title .tit {
+    font-size: 0.4rem;
+    color: #666;
+    margin-bottom: 0.2rem
+}
+.fb-cell-title .txt {
+    font-size: 0.32rem;
+    color: #999;
+    flex-wrap: wrap
+}
+.fb-cell-title.left {
+    align-items: stretch;
+    -webkit-align-items: stretch
+}
+.bound {
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center
+}
+.bound .tit {
+    font-size: 0.4rem;
+    color: #333;
+    margin: 0 0 0.4rem
+}
+.bound .name {
+    font-size: 0.48rem;
+    color: #666;
+    font-weight: bold;
+    margin: 0.266667rem 0 0
+}
+.bound .txt {
+    font-size: 0.346667rem;
+    color: #333;
+    margin: 0.533333rem 0
+}
+.bound img {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    width: 2.133333rem;
+    height: 2.133333rem
+}

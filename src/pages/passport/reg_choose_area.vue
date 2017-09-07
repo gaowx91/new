@@ -1,0 +1,87 @@
+<template>
+    <div class="wrapper">
+        <v-Header child>
+            <div class="mod-header reg-header" slot="con">
+                <i class="mintui mintui-back" @click="$router.go(-1)"></i>
+                <div class="title">
+                    快速註冊
+                </div>
+            </div>
+        </v-Header>
+        <v-Content padded>
+            <v-Cell class="choose-cell" choose v-for="(item,index) in options" :class="[{'selected':active===index},item.state]" :key="index" @my-Child="changeBz(index)">
+                <div class="is-left" slot="left">
+                    <div class="choose-img" :style="{backgroundImage: 'url(' + item.img + ')'}"></div>
+                    <span class="choose-selected"><i class="icon icon-hook"></i></span>
+                </div>
+                <span class="tit">{{item.tit}}</span><span class="txt">註冊</span>
+            </v-Cell>
+            <div class="reg-submit">
+                <router-link to="regphone">
+                    <mt-button type="primary" size="large">下一步</mt-button>
+                </router-link>
+                <router-link to="regfacebooktype">
+                    <i class="icon icon-facebook-square"></i><span class="text-default">使用facebook</span> <span class="text-info">快速注册</span>
+                </router-link>
+            </div>
+        </v-Content>
+    </div>
+</template>
+<script>
+import vContent from '../../components/content'
+import vCell from '../../components/cell'
+import vHeader from '../../components/header'
+require("#/css/passport/reg_choose_area.css")
+export default {
+    data() {
+        return {
+            links: '',
+            options: [{
+                tit: '台灣地區',
+                id: '1',
+                img: 'static/images/passport/choose/choose_1.png',
+                state: ''
+            }, {
+                tit: '香港地區',
+                id: '2',
+                img: 'static/images/passport/choose/choose_2.png',
+                state: ''
+            }, {
+                tit: '澳門地區',
+                img: 'static/images/passport/choose/choose_3.png',
+                state: ''
+            }, {
+                tit: '大陸地區',
+                id: '4',
+                img: 'static/images/passport/choose/choose_4.png',
+                state: ''
+            }, {
+                tit: '馬來地區',
+                id: '5',
+                img: 'static/images/passport/choose/choose_5.png',
+                state: 'disabled'
+            }],
+            active: 0
+        }
+    },
+    components: {
+        vContent,
+        vCell,
+        vHeader
+    },
+    methods: {
+        changeBz(index) {
+            let _this = this;
+            if (_this.options[index].state === 'disabled') {
+                return false
+            } else {
+                this.active = index
+            }
+        }
+    },
+    mounted() {
+        this.overScroll();
+    }
+}
+
+</script>
