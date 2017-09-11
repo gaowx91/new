@@ -114,9 +114,6 @@ export default {
             accountP: []
         }
     },
-    created(){
-        console.log(this.$router.params);
-    },
     methods: {
         accountProperties(accountP) {
             this.popupVisible4 = true;
