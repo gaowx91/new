@@ -14,6 +14,7 @@ switch (domain) {
         break;
 }
 
-export dafault{
-	'GET_GOODS': API_SITE + 'goods/', //获取商品详情信息
+export default{
+    'GET_GOODS': API_SITE + 'goods/', //获取商品详情信息
+	'GOOD_SEARCH': API_SITE + 'search/GoodSearch/', //搜索商品
 }

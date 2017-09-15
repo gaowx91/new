@@ -5,6 +5,7 @@ import Mint from 'mint-ui'
 import App from './App'
 import router from './router'
 import FastClick from 'fastclick'
+import _config from './common/config.js'
 
 import axios from 'axios'
 import overScroll from '@/components/scroll'
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 }, false);
 
 Vue.prototype.$http = axios;
+Vue.prototype.CONFIG = _config;
 
 
 Vue.config.productionTip = false;
