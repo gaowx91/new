@@ -10,16 +10,18 @@
         </v-Header>
         <v-Content class="reg-content">
             <form class="reg-form">
-                <v-InputGroup icon='user' placeholder="設定登入帳號" @change="Validation" :message="message" state="true" prompt="true" :required="required"></v-InputGroup>
-                <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password"></v-InputGroup>
-                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" toggle="true" message="w"></v-InputGroup>
-                <v-InputGroup icon='user' placeholder="輸入真實姓名"></v-InputGroup>
-                <v-InputGroup icon='id-card' placeholder="輸入身份證字號" type="tel"></v-InputGroup>
-                <v-InputGroup icon='star' placeholder="輸入推薦人帳號（可不填）" message="d"></v-InputGroup>
+                <v-InputGroup icon='user' placeholder="設定登入帳號" @change="validationUsername" :message="msgUsername" state="true" :required="requiredUsername" :maxlength="16" v-model="username"></v-InputGroup>
+                <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password" :maxlength="16" @change="validationPwd" :message="msgPwd" :required="requiredPwd" v-model="pwd"></v-InputGroup>
+
+                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" :maxlength="16" toggle="true"  @change="validationPaypwd" :message="msgPaypwd" :required="requiredPaypwd" v-model="paypwd"></v-InputGroup>
+
+                <v-InputGroup icon='user' placeholder="輸入真實姓名" @change="validationRealname" :message="msgRealname" :required="requiredRealname" v-model="realname"></v-InputGroup>
+
+                <v-InputGroup icon='id-card' placeholder="輸入身份證字號" type="tel"  @change="validationIdcard" :message="msgIdcard" state="true" :required="requiredIdcard" v-model="idcard"></v-InputGroup>
+
+                <v-InputGroup icon='star' placeholder="輸入推薦人帳號（可不填）" message="數字編號，可不填寫" v-model="agentid"></v-InputGroup>
                 <div class="reg-submit">
-                    <router-link to="">
-                        <mt-button type="primary" size="large">完成註冊</mt-button>
-                    </router-link>
+                    <mt-button type="primary" size="large" @click.prevent="gotoReg">完成註冊</mt-button>
                     <div class="reg-agree">
                         點擊視為同意
                         <router-link to="" class="text-info">《服務條款》</router-link>
@@ -39,24 +41,156 @@ require("#/css/passport/reg_secret.css")
 export default {
     data() {
         return {
-            message: '請輸入手機號碼',
-            required: false
+            username:'w22222',
+            msgUsername: '帳號以英文字母開頭，由字母數字組成，長度為6-16個字元',
+            requiredUsername: false,
+            pwd:'q123456',
+            msgPwd: '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位',
+            requiredPwd: false,
+            paypwd:'',
+            msgPaypwd: '輸入支付密碼',
+            requiredPaypwd: false,
+            idcard:'',
+            msgIdcard: '作為驗證個資依據，請填寫真實資料',
+            requiredIdcard: false,
+            realname:'',
+            msgRealname: '輸入真實姓名',
+            requiredRealname: false,
+            agentid:'',
+            routeParams:{},
         }
     },
     components: {
         vContent,
         vInputGroup,vHeader
     },
+    created(){
+        console.log(this.$route.query);
+        console.log(this.$route.params);
+        this.routeParams = this.$route.query;
+    },
     methods: {
-        Validation(currentValue) {
-            if (currentValue !== '1' || currentValue == '') {
-                this.message = '手機號輸入錯誤，請重新輸入';
-                return this.required = true;
-            } else {
-                this.message = '請輸入手機號碼'
-                return this.required = false;
+        gotoReg(){
+            // if(this.username ==''||this.pwd ==''||this.pwd ==''||this.pwd ==''){
+            // }
+            let paramsData={
+                username:this.username,
+                pwd:this.pwd,
+                paypwd:this.paypwd ? this.paypwd : this.pwd,
+                realname:this.realname,
+                idcard:this.idcard,
             }
-        }
+            let apiUrl = '';
+            console.log(this.routeParams.area);
+            if(this.routeParams.area == 'hk'){
+                paramsData.type = this.routeParams.type;
+                paramsData.countrycode = this.routeParams.countrycode;
+                paramsData.code = this.routeParams.code;
+                paramsData.mobile = this.routeParams.mobile;
+                paramsData.agentid = this.agentid;
+                apiUrl = this.CONFIG.REG_HK; //註冊香港用戶
+            }else if(this.routeParams.area == 'cn'){
+                paramsData.code = this.routeParams.code;
+                paramsData.mobile = this.routeParams.mobile;
+                apiUrl = this.CONFIG.REG_OS; //註冊大陸用戶
+            }else{
+                paramsData.code = this.routeParams.code;
+                paramsData.mobile = this.routeParams.mobile;
+                paramsData.agentid = this.agentid;
+                apiUrl = this.CONFIG.REG_TW; //註冊台灣用戶
+            }
+            this.$http({
+                method: 'post',
+                url: apiUrl, //註冊香港用戶
+                data: this.$qs.stringify(paramsData),
+            }).then(res => {
+                this.disabledSend = false;
+                console.log(res.data);
+                if (res.data.status == true) {
+                    console.log(res.data.info);
+                    // this.$router.push('/user_login');
+                } else {
+                   this.Toast(res.data.info);
+                }
+            }).catch(error => {
+                this.Toast('catch错误');
+            });
+        },
+        validationUsername(value) {
+            // if(value == ''){
+            //     this.msgUsername = '請輸入會員帳號';
+            //     this.requiredUsername =true;
+            //     return false;
+            // }
+            // 账号，以英文字母开头，由英文、数字组成，长度在6-16位之间（可单独使用字母）
+            let reg = /^[a-zA-Z][a-zA-Z0-9]{5,15}$/;
+            if(reg.test(value)){
+                // this.msgUsername = '帳號以英文字母開頭，由字母數字組成，長度為6-16個字元';
+                this.requiredUsername =false;
+            }else{
+                // this.msgUsername = '帳號格式不符合要求';
+                this.requiredUsername =true;
+            }
+        },
+        validationPwd(value) {
+            // if(value == ''){
+            //     this.msgPwd = '請輸入密碼';
+            //     this.requiredPwd =true;
+            //     return false;
+            // }
+            // 密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位
+            // let reg = new RegExp("^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$)[\da-zA-Z`~!@#$^&*()=|{}':;',\\[\\]]{6,16}");
+            // let reg = new RegExp("^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$).{6,16}");
+            let reg = new RegExp("/^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$)[\da-zA-Z][^ \u4e00-\u9fa5]{5,9}$/");
+            if(reg.test(value)){
+                // this.msgPwd = '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位';
+                this.requiredPwd =false;
+            }else{
+                // this.msgPwd = '密碼設置不符合要求';
+                this.requiredPwd =true;
+            }
+            
+        },
+        validationPaypwd(value) {
+            // if(value == ''){
+            //     this.msgPaypwd = '請確認密碼';
+            //     this.requiredPaypwd =true;
+            //     return false;
+            // }
+            // if(value==this.pwd){
+            //     this.msgPaypwd = '請確認密碼';
+            //     this.requiredPaypwd =false;
+            // }else{
+            //     this.msgPaypwd = '兩次填寫的密碼不一致，請重新填寫';
+            //     this.requiredPaypwd =true;
+            // }
+        },
+        validationRealname(value) {
+            if(value == ''){
+                // this.msgRealname = '請輸入真實姓名';
+                this.requiredRealname =true;
+            }else{
+                this.requiredRealname =false;
+            }
+           
+        },
+        validationIdcard(value) {
+             if(value == ''){
+                this.msgIdcard = '請輸入身份證字號';
+                this.requiredIdcard =true;
+            }else{
+                this.requiredIdcard =false;
+            }
+            // 长度为4位，由数字、英文组成
+            // let reg = /^[\da-zA-Z]{4}$/;
+            // if(reg.test(value)){
+            //     this.msgIdcard = '作為驗證個資依據，請填寫真實資料';
+            //     this.requiredIdcard =false;
+            // }else{
+            //     this.msgIdcard = '格式錯誤，請重填寫您身份證字號';
+            //     this.requiredIdcard =true;
+            // }
+        },
     },
     mounted(){
         this.overScroll();

@@ -10,13 +10,11 @@
         </v-Header>
         <v-Content class="reg-content">
             <form class="reg-form">
-                <v-InputGroup icon='user' placeholder="設定登入帳號"></v-InputGroup>
-                <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password"></v-InputGroup>
-                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" toggle="true" payset="true"></v-InputGroup>
+                <v-InputGroup icon='user' placeholder="設定登入帳號" v-model="username"></v-InputGroup>
+                <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password" v-model="pwd"></v-InputGroup>
+                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" toggle="true" payset="true" v-model="paypwd"></v-InputGroup>
                 <div class="reg-submit">
-                    <router-link to="">
-                        <mt-button type="primary" size="large">完成註冊</mt-button>
-                    </router-link>
+                    <mt-button type="primary" size="large" @click.prevent="regTwCrop">完成註冊</mt-button>
                     <div class="reg-agree">
                         點擊視為同意
                         <router-link to="" class="text-info">《服務條款》</router-link>
@@ -36,7 +34,10 @@ import vHeader from '@/components/header'
 export default {
     data() {
         return {
-            msg: 'Welcome to Your Vue.js App'
+            username: '',
+            pwd: '',
+            paypwd: '',
+            baseData:this.$route.query,
         }
     },
     components: {
@@ -44,8 +45,48 @@ export default {
         vInputGroup,
         vCheckbox,vHeader
     },
+    created(){
+        // console.log(this.$route.query);
+        console.log(this.baseData);
+    },
+    methods:{
+        regTwCrop(){
+            let paramsData={
+                username:this.username,
+                pwd:this.pwd,
+                paypwd:this.paypwd ? this.paypwd : this.pwd,
+                realname:this.baseData.realname,
+                idcard:this.baseData.idcard,
+                mobile:this.baseData.mobile,
+                code:this.baseData.code,
+                cropname:this.baseData.cropname,
+                cropno:this.baseData.cropno,
+            }
+            this.$http({
+                method: 'post',
+                url: this.CONFIG.REG_TW_CROP, //註冊台灣公司用戶
+                data: this.$qs.stringify(paramsData),
+            }).then(res => {
+                if (res.data.status == true) {
+                    console.log(res.data.info);
+                    // this.$router.push('/user_login');
+                } else {
+                   this.Toast(res.data.info);
+                }
+            }).catch(error => {
+                this.Toast('catch错误');
+            });
+        },
+    },
     mounted(){
         this.overScroll();
+    },
+    watch:{
+        '$route.query'(value){
+            if(value){
+                Object.assign(this.baseData,value);
+            }
+        }
     }
 }
 

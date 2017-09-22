@@ -10,7 +10,7 @@
             </figcaption>
         </figure>
     </div>
-    <div class="cell" v-else-if="choose" @click="contraction(index)">
+    <div class="cell" v-else-if="choose" @click="$emit('my-Radio')">
          <figure>
                 <slot name='left'></slot>
             <figcaption>

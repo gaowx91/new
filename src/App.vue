@@ -1,7 +1,7 @@
 <template>
     <div class="app" id="app">
         <loading v-show="loading" :loading='loading'></loading>
-        <keep-alive exclude="orderDetail,orderdetailrate,orderdetailqa">
+        <keep-alive :include="includeComponents">
             <router-view></router-view>
         </keep-alive>
     </div>
@@ -14,7 +14,9 @@ export default {
     name: 'app',
     data() {
         return {
-            loading: false
+            loading: false,
+            includeComponents:'',
+            excludeComponents:'userlogin,orderDetail,orderdetailrate,orderdetailqa',
         }
     },
     components: {

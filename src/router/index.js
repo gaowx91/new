@@ -204,7 +204,7 @@ export default new Router({
             name: 'RegChooseArea',
             component: RegChooseArea
         }, {
-            path: '/regphone',
+            path: '/regphone/:area',
             name: 'RegPhone',
             component: RegPhone
         }, {

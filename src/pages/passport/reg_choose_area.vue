@@ -17,7 +17,7 @@
                 <span class="tit">{{item.tit}}</span><span class="txt">註冊</span>
             </v-Cell>
             <div class="reg-submit">
-                <router-link to="regphone">
+                <router-link :to="'/regphone/'+ chooseArea">
                     <mt-button type="primary" size="large">下一步</mt-button>
                 </router-link>
                 <router-link to="regfacebooktype">
@@ -35,33 +35,39 @@ require("#/css/passport/reg_choose_area.css")
 export default {
     data() {
         return {
-            links: '',
             options: [{
                 tit: '台灣地區',
                 id: '1',
+                area: 'tw',
                 img: 'static/images/passport/choose/choose_1.png',
                 state: ''
             }, {
                 tit: '香港地區',
                 id: '2',
+                area: 'hk',
                 img: 'static/images/passport/choose/choose_2.png',
                 state: ''
             }, {
                 tit: '澳門地區',
+                id: '3',
+                area: 'mo',
                 img: 'static/images/passport/choose/choose_3.png',
                 state: ''
             }, {
                 tit: '大陸地區',
                 id: '4',
+                area: 'cn',
                 img: 'static/images/passport/choose/choose_4.png',
                 state: ''
             }, {
                 tit: '馬來地區',
                 id: '5',
+                area: 'ml',
                 img: 'static/images/passport/choose/choose_5.png',
                 state: 'disabled'
             }],
-            active: 0
+            active: 0,
+            chooseArea:'tw'
         }
     },
     components: {
@@ -71,11 +77,11 @@ export default {
     },
     methods: {
         changeBz(index) {
-            let _this = this;
-            if (_this.options[index].state === 'disabled') {
+            if (this.options[index].state === 'disabled') {
                 return false
             } else {
-                this.active = index
+                this.active = index;
+                this.chooseArea = this.options[index].area;
             }
         }
     },

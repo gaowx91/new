@@ -32,7 +32,7 @@
                 <slot></slot>
             </div>
         </div>
-        <div class="input-group-prompt" v-if="message.length">
+        <div class="input-group-prompt" v-if="prompt">
             {{message}}
         </div>
     </div>
@@ -50,7 +50,7 @@ export default {
         },
         icon: String,
         id: String,
-        // no: String,
+        no: String,
         placeholder: String,
         state: false,
         info: true,
@@ -58,7 +58,7 @@ export default {
             type: String,
             default: 'text'
         },
-        value:{},
+        value:'',
         toggle: true,
         prompt: false,
         required: false,
