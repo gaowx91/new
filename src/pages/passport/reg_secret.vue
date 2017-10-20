@@ -10,10 +10,10 @@
         </v-Header>
         <v-Content class="reg-content">
             <form class="reg-form">
-                <v-InputGroup icon='user' placeholder="設定登入帳號" @change="validationUsername" :message="msgUsername" state="true" :required="requiredUsername" :maxlength="16" v-model="username"></v-InputGroup>
-                <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password" :maxlength="16" @change="validationPwd" :message="msgPwd" :required="requiredPwd" v-model="pwd"></v-InputGroup>
+                <v-InputGroup icon='user' placeholder="設定登入帳號" @change="validationUsername" :message="msgUsername" state="true" :required="requiredUsername" :maxlength="16" v-model="username" v-if="!isFb"></v-InputGroup>
+                <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password" :maxlength="16" @change="validationPwd" :message="msgPwd" :required="requiredPwd" v-model="pwd" v-if="!isFb"></v-InputGroup>
 
-                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" :maxlength="16" toggle="true"  @change="validationPaypwd" :message="msgPaypwd" :required="requiredPaypwd" v-model="paypwd"></v-InputGroup>
+                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" :maxlength="16" :toggle="!isFb"  @change="validationPaypwd" :message="msgPaypwd" :required="requiredPaypwd" v-model="paypwd"></v-InputGroup>
 
                 <v-InputGroup icon='user' placeholder="輸入真實姓名" @change="validationRealname" :message="msgRealname" :required="requiredRealname" v-model="realname"></v-InputGroup>
 
@@ -41,10 +41,10 @@ require("#/css/passport/reg_secret.css")
 export default {
     data() {
         return {
-            username:'w22222',
+            username:'',
             msgUsername: '帳號以英文字母開頭，由字母數字組成，長度為6-16個字元',
             requiredUsername: false,
-            pwd:'q123456',
+            pwd:'',
             msgPwd: '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位',
             requiredPwd: false,
             paypwd:'',
@@ -57,7 +57,10 @@ export default {
             msgRealname: '輸入真實姓名',
             requiredRealname: false,
             agentid:'',
-            routeParams:{},
+            // routeParams:{},
+            isFb:false,
+            openid:'',
+            token:'',
         }
     },
     components: {
@@ -65,50 +68,56 @@ export default {
         vInputGroup,vHeader
     },
     created(){
-        console.log(this.$route.query);
-        console.log(this.$route.params);
-        this.routeParams = this.$route.query;
+        // this.routeParams = this.$route.query;
+
+        this.isFb = Boolean(this.FUNCTION.getCookie('isFb'));
+        if(this.isFb){
+            this.openid = this.FUNCTION.getCookie('fb_openid');
+            this.token = this.FUNCTION.getCookie('fb_token');
+        }
+    },
+    computed:{
+       routeParams(){
+         return this.$route.query;
+       }
     },
     methods: {
         gotoReg(){
             // if(this.username ==''||this.pwd ==''||this.pwd ==''||this.pwd ==''){
             // }
             let paramsData={
-                username:this.username,
-                pwd:this.pwd,
-                paypwd:this.paypwd ? this.paypwd : this.pwd,
+                // username:this.username,
+                // pwd:this.pwd,
+                // paypwd:this.paypwd ? this.paypwd : this.pwd,
                 realname:this.realname,
+                paypwd:this.paypwd ? this.paypwd : this.pwd,
                 idcard:this.idcard,
+                agentid:this.agentid,
             }
+            Object.assign(paramsData,this.routeParams);
             let apiUrl = '';
-            console.log(this.routeParams.area);
-            if(this.routeParams.area == 'hk'){
-                paramsData.type = this.routeParams.type;
-                paramsData.countrycode = this.routeParams.countrycode;
-                paramsData.code = this.routeParams.code;
-                paramsData.mobile = this.routeParams.mobile;
-                paramsData.agentid = this.agentid;
-                apiUrl = this.CONFIG.REG_HK; //註冊香港用戶
-            }else if(this.routeParams.area == 'cn'){
-                paramsData.code = this.routeParams.code;
-                paramsData.mobile = this.routeParams.mobile;
-                apiUrl = this.CONFIG.REG_OS; //註冊大陸用戶
+
+            if(this.isFb){
+                paramsData.openid = this.openid;
+                paramsData.token = this.token;
+                apiUrl=this.CONFIG.FB_REG;
             }else{
-                paramsData.code = this.routeParams.code;
-                paramsData.mobile = this.routeParams.mobile;
-                paramsData.agentid = this.agentid;
-                apiUrl = this.CONFIG.REG_TW; //註冊台灣用戶
+                paramsData.pwd = this.pwd;
+                paramsData.username = this.username;
+                apiUrl=this.CONFIG.REG;
             }
+            
             this.$http({
                 method: 'post',
-                url: apiUrl, //註冊香港用戶
+                url: apiUrl, //註冊用戶
                 data: this.$qs.stringify(paramsData),
             }).then(res => {
                 this.disabledSend = false;
                 console.log(res.data);
                 if (res.data.status == true) {
-                    console.log(res.data.info);
-                    // this.$router.push('/user_login');
+                    // console.log(res.data.info);
+                    // this.$router.push('/userlogin');
+                    this.$router.push('/member');
                 } else {
                    this.Toast(res.data.info);
                 }
@@ -139,9 +148,7 @@ export default {
             //     return false;
             // }
             // 密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位
-            // let reg = new RegExp("^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$)[\da-zA-Z`~!@#$^&*()=|{}':;',\\[\\]]{6,16}");
-            // let reg = new RegExp("^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$).{6,16}");
-            let reg = new RegExp("/^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$)[\da-zA-Z][^ \u4e00-\u9fa5]{5,9}$/");
+            let reg = this.FUNCTION.pwd;
             if(reg.test(value)){
                 // this.msgPwd = '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位';
                 this.requiredPwd =false;
@@ -152,18 +159,20 @@ export default {
             
         },
         validationPaypwd(value) {
-            // if(value == ''){
-            //     this.msgPaypwd = '請確認密碼';
-            //     this.requiredPaypwd =true;
-            //     return false;
-            // }
-            // if(value==this.pwd){
-            //     this.msgPaypwd = '請確認密碼';
-            //     this.requiredPaypwd =false;
-            // }else{
-            //     this.msgPaypwd = '兩次填寫的密碼不一致，請重新填寫';
-            //     this.requiredPaypwd =true;
-            // }
+            console.log(value == ''&& !this.isFb);
+            if(value == ''&& !this.isFb){
+                this.paypwd = this.pwd;
+                this.requiredPaypwd =false;
+                return false;
+            }
+            let reg = this.FUNCTION.pwd;
+            if(reg.test(value)){
+                this.msgPaypwd = '輸入支付密碼';
+                this.requiredPaypwd =false;
+            }else{
+                this.msgPaypwd = '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位';
+                this.requiredPaypwd =true;
+            }
         },
         validationRealname(value) {
             if(value == ''){

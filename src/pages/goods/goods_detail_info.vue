@@ -163,6 +163,15 @@ export default {
             active: 0
         }
     },
+    beforeRouteEnter(to,from,next){
+        next(vm=>{
+            console.log(vm);
+        })
+        console.log(3333);
+    },
+    created(){
+        console.log('goods_info');
+    },
     methods: {
         more() {
             (this.auto = !this.auto) ? (this.auto = 'auto') : (this.auto = '');
@@ -187,6 +196,7 @@ export default {
     },
     mounted() {
         this.overScroll();
+        console.log(666);
     }
 }
 

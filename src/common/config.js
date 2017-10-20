@@ -22,10 +22,20 @@ export default{
     'REQUEST_REG_CODE': API_PASS +'api/requestregcode', //1.3發送註冊驗證碼
     'GET_REG_IMG_VERIFY_CODEKEY': API_PASS +'api/getregimgverifycodekey', //1.2获取注册短信验证码KEY
     'CHECK_REG_CODE': API_PASS +'api/checkregcode', //1.4校驗註冊驗證碼
+
+    'REG': API_PASS +'api/reg', //統一註冊接口
     'REG_HK': API_PASS +'api/reghk', //註冊香港用戶
     'REG_OS': API_PASS +'api/regos', //註冊大陸用戶
     'REG_TW': API_PASS +'api/regtw', //註冊台灣用戶
     'REG_TW_CROP': API_PASS +'api/regtwcrop', //註冊台灣公司用戶
+    
+    'FB_LOGIN': API_PASS +'api/fb/fblogin', //FaceBook登錄
+    'SEND_BIND_FB_CODE_MS': API_PASS +'api/fb/sendbindfbuserverifycodesms', //發送綁定FaceBook用戶驗證短信
+    'BIND_FB_USER': API_PASS +'api/fb/bindfbuser', //綁定FaceBook用戶
+    'FB_REQUEST_REG_CODE': API_PASS +'api/fb/fbrequestregcode', //FaceBook請求注册验证码
+    'CHECK_FB_REG_CODE': API_PASS +'api/fb/checkfbregcode', //FaceBook校驗註冊驗證碼
+    'FB_REG': API_PASS +'api/fb/fbreg', //FaceBook統一註冊接口
+
 
     'GET_GOODS': API_SITE + 'api/goods/', //获取商品详情信息
     'GOOD_SEARCH': API_SITE + 'api/search/GoodSearch/', //搜索商品

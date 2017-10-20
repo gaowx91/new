@@ -1,5 +1,6 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper" :view-id="newRender">
+    <!-- <div class="wrapper"> -->
         <v-Header child>
             <div class="mod-header reg-header" slot="con">
                 <i class="mintui mintui-back" @click="$router.go(-1)"></i>
@@ -15,17 +16,19 @@
                 </div>
             </section>
             <div class="reg-form">
-                <div class="reg-choose-usertype">
-                    <vRadio v-for="(item,index) in options" v-on:my-Radio='keyShowFun' :class="item.selected" :key="index" name="rad" :state="index" >
+                <!-- <div class="reg-choose-usertype"> -->
+                    <!-- <div v-for="(item,index) in options" v-on:my-Radio='keyShowFun' :class="item.selected" :key="index" name="rad" :state="index">
                         <i class="icon icon-circle-blank" :class="item.icon"></i>
                         <span>{{item.txt}}</span>
-                    </vRadio>
-                </div>
+                    </div> -->
+                    <v-Radio class="reg-choose-usertype" icon="radio-core-check" v-model="links" :options="options" v-if="newRender">
+                    </v-Radio>
+                <!-- </div> -->
                 <v-InputGroup icon='iphone' autofocus @change="validateMobile" placeholder="請輸入手機號碼" type="tel" id="tel" v-model="mobile" :message="messageMobile" :required="requiredMobile"></v-InputGroup>
 
-                <v-InputGroup icon='check-shield-sign' other="true" placeholder="輸入驗證碼" v-model="code">
+                <v-InputGroup icon='check-shield-sign' other placeholder="輸入驗證碼" v-model="code">
                     <!-- <router-link :to="changelinks"> -->
-                        <mt-button type="primary" :disabled='disabledSend'  @click="sendCode">{{sendBtnTxt}}</mt-button>
+                        <mt-button type="primary" :disabled='disabledSend'  @click.stop.prevent="sendCode">{{sendBtnTxt}}</mt-button>
                     <!-- </router-link> -->
                 </v-InputGroup>
 
@@ -46,8 +49,8 @@
         <v-Dialog :modal="imgCodeVis" @cancel="imgCodeVis = false" @ok="confirmModal">
             <span class="modal-title" slot="header">請輸入驗證碼</span>
             <slot>
-                <v-InputGroup icon='check-shield-sign' other="true" id="aa" placeholder="輸入驗證碼" v-model="img_code">
-                    <img :src="imgUrl" @click="changeCode">
+                <v-InputGroup icon='check-shield-sign' other id="aa" placeholder="輸入驗證碼" v-model="img_code">
+                    <img :src="imgUrl" @click="getImgVerifyCode">
                 </v-InputGroup>
                 <!-- <div class="text-danger" :style="{visibility:visb}">{{msg}}</div> -->
                 <div class="text-danger" v-if="msg.length">{{msg}}</div>
@@ -99,19 +102,21 @@ const areaConfig ={
     },
 }
 export default {
+    name:"regPhone",
     data() {
         return {
             // changelinks: '',
             links: '/regsecret',
             options: [{
                 selected: 'selected',
-                txt: '個人用戶註冊',
-                link: '/regsecret',
+                label: '個人用戶註冊',
+                value: '/regsecret',
                 icon: 'icon-check-circle'
             }, {
                 selected: '',
-                txt: '企業用戶註冊',
-                link: '/regcompanyinfo',
+                label: '企業用戶註冊',
+                value: '/regcompanyinfo',
+                disabled:true,
                 icon: ''
             }],
             imgCodeVis: false,
@@ -123,33 +128,28 @@ export default {
             sendBtnTxt:'發送驗證碼簡訊',
             okClass: 'danger',
             okContent: '2',
-            // areaName:'台灣地區',
-            // areaId:'1',
-            // areaCountrycode:'886',
-            // area:this.$route.params.area,
             areaData:{
                 name:'',
                 id:'',
                 countrycode:'',
                 myTel:''
             },
-            mobile:'12345674',
+            mobile:'',
             messageMobile:'',
             requiredMobile:false,
-            disabledSend:true,
+            // disabledSend:true,
             imgUrl:'',
             img_code:'',
             img_codekey:'',
             type:1,
             code:'',
             randomCode:Math.random().toString().substring(3,7),
+            isCountDown:false,
+            isFb:false,
+            openid:'',
+            token:'',
             // disabledNext:true,
         }
-    },
-    computed:{
-        disabledNext:function(){
-            return (this.mobile.length ==0 || this.code.length==0);
-        },
     },
     components: {
         vContent,
@@ -161,14 +161,31 @@ export default {
         vHeader
     },
     created(){
-        let temp = areaConfig[this.$route.params.area];
-        if(temp){
-            this.areaData = temp;
-        }else{
-            this.Toast('瀏覽器參數錯誤');
-            this.$router.go(-1);
+        console.log(5555);
+        this.isFb = this.FUNCTION.getCookie('isFb');
+        if(this.isFb){
+            this.openid = this.FUNCTION.getCookie('fb_openid');
+            this.token = this.FUNCTION.getCookie('fb_token');
         }
-        // console.log(this.imgCodeVis =true);
+    },
+    computed:{
+        disabledNext:function(){
+            return (this.mobile.length ==0 || this.code.length==0);
+        },
+        disabledSend:function(){
+            return (this.mobile.length ==0 || this.requiredMobile ||this.isCountDown);
+        },
+        newRender:function(){
+            let area = this.$route.params.area;
+            if(area){
+               this.areaData = areaConfig[area]; 
+               if(area=='tw' && !this.isFb){//只有台湾非fb用户有企业注册
+                   return true;
+               }else{
+                  return false;
+               }
+            }
+        }
     },
     methods: {
         keyShowFun: function(index) {
@@ -179,56 +196,13 @@ export default {
             this.options[index].selected = 'selected';
             this.options[index].icon = 'icon-check-circle';
             this.links = this.options[index].link;
-
-        },
-        gotoCheck1(){
-            this.type =1;//发送
-            this.checkRegCode(this.code,()=>{
-                // this.disabledNext = false;
-            });
-        },
-        gotoCheck2(){
-            this.type =2;//接收
-            this.checkRegCode(this.randomCode,()=>{
-                // this.disabledNext = false;
-            });
-        },
-        checkRegCode(code,callback){//校驗註冊驗證碼
-            let paramsData={
-                type:this.type,
-                countrycode:this.areaData.countrycode,
-                mobile:this.mobile,
-                code:code,
-            }
-            this.$http({
-                method: 'post',
-                url: this.CONFIG.CHECK_REG_CODE, //1.4校驗註冊驗證碼
-                data: this.$qs.stringify(paramsData),
-            }).then(res => {
-                // this.disabledSend = false;
-                //console.log(res.data);
-                if (res.data.status == true) {
-                    paramsData.area = this.$route.params.area;
-                    this.$router.push({path:this.links,query:paramsData});
-                    // this.$router.push({name:'RegSecret',params:paramsData});
-                } else {
-                   this.Toast(res.data.info);
-                }
-                if(typeof callback == 'function'){
-                 callback();
-                }
-            }).catch(error => {
-                this.Toast('catch错误');
-                if(typeof callback == 'function'){
-                  callback();
-                }
-            });
         },
         sendCode() {//点击发送验证码简讯
-            this.disabledSend = true;
-            this.requestRegCode(() =>{//简讯接口请求
-                this.disabledSend = false;
-            })
+            // this.disabledSend = true;
+            // this.requestRegCode(() =>{//简讯接口请求
+            //     this.disabledSend = false;
+            // })
+            this.requestRegCode();
         },
         confirmModal() {
             // console.log(this.img_code);
@@ -240,16 +214,30 @@ export default {
             }
             this.requestRegCode();
         },
-        requestRegCode(callback){//简讯接口请求
+        requestRegCode(){//简讯接口请求
             let paramsData={
                 countrycode:this.areaData.countrycode,
                 mobile:this.mobile,
-                img_code:this.img_code,
-                img_codekey:this.img_codekey,
             }
+            let apiUrl='';
+            if(this.isFb){
+               paramsData.openid =  this.openid;
+               paramsData.token =  this.token;
+               apiUrl=this.CONFIG.FB_REQUEST_REG_CODE;//FaceBook請求注册验证码
+            }else{
+                paramsData.img_code = this.img_code;
+                paramsData.img_codekey = this.img_codekey;
+               apiUrl=this.CONFIG.REQUEST_REG_CODE;
+            }
+            // let paramsData={
+            //     countrycode:this.areaData.countrycode,
+            //     mobile:this.mobile,
+            //     img_code:this.img_code,
+            //     img_codekey:this.img_codekey,
+            // }
             this.$http({
                 method: 'post',
-                url: this.CONFIG.REQUEST_REG_CODE, //發送註冊驗證碼
+                url: apiUrl, //發送註冊驗證碼
                 data: this.$qs.stringify(paramsData),
             }).then(res => {
                 // this.disabledSend = false;
@@ -258,23 +246,68 @@ export default {
                     this.Toast(res.data.info);
                     this.imgCodeVis = false;
                     this.countDown(180);
-                } else {
-                    if(res.data.errCode == -210200303){//"手機號碼已經註冊"
+                } else {                    
+                if(res.data.errCode == -210200303){//"手機號碼已經註冊"
                         this.$router.push('/regphoneextis');
-                    }else if(res.data.errCode == -1000101 ||res.data.errCode == -1000102 || res.data.errCode == -1 ){//需要进行图片验证
-                        // this.changelinks = '';
-                        this.getImgVerifyCode();
-                        this.disabledSend = false;
+                    // }else if(res.data.errCode == -1000101 ||res.data.errCode == -1000102 || res.data.errCode == -1 ){
+                    }else{//需要进行图片验证
+                        if(this.isFb){
+                           this.Toast(res.data.info);
+                        }else{
+                            this.msg = res.data.info;
+                            this.getImgVerifyCode();
+                        }
+                        // this.getImgVerifyCode();
+                        // this.disabledSend = false;
                     }
                 }
-                if(typeof callback == 'function'){
-                 callback();
+                // if(typeof callback == 'function'){
+                //  callback();
+                // }
+            }).catch(error => {
+                this.Toast('catch错误');
+            });
+        },
+        gotoCheck1(){
+            this.type =1;//发送
+            this.checkRegCode(this.code);
+        },
+        gotoCheck2(){
+            this.type =2;//接收
+            this.checkRegCode(this.randomCode);
+        },
+        checkRegCode(code){//校驗註冊驗證碼
+            let baseData={
+                type:this.type,
+                countrycode:this.areaData.countrycode,
+                mobile:this.mobile,
+                code:code,
+            }
+            let paramsData ={};
+            let apiUrl='';
+            if(this.isFb){
+               paramsData.openid =  this.openid;
+               paramsData.token =  this.token;
+               apiUrl=this.CONFIG.CHECK_FB_REG_CODE;//FaceBook校驗註冊驗證碼
+            }else{
+               apiUrl=this.CONFIG.CHECK_REG_CODE;
+            }
+            Object.assign(paramsData,baseData);
+            this.$http({
+                method: 'post',
+                url: apiUrl, //1.4校驗註冊驗證碼
+                data: this.$qs.stringify(paramsData),
+            }).then(res => {
+                // this.disabledSend = false;
+                //console.log(res.data);
+                if (res.data.status == true) {
+                    this.$router.push({path:this.links,query:baseData});
+                    // this.$router.push({name:'RegSecret',params:paramsData});
+                } else {
+                   this.Toast(res.data.info||'錯誤編碼'+res.data.errCode);
                 }
             }).catch(error => {
                 this.Toast('catch错误');
-                if(typeof callback == 'function'){
-                  callback();
-                }
             });
         },
         changeCode(){
@@ -306,7 +339,7 @@ export default {
             if(value == ''){
                 this.messageMobile = '請輸入手機號碼';
                 this.requiredMobile = true;
-                this.disabledSend =true;
+                // this.disabledSend =true;
                 return false;
             }
            // let countrycode= this.areaData.countrycode;
@@ -335,19 +368,21 @@ export default {
            if(!mobileReg.test(value)){
              this.messageMobile = '手機號碼輸入錯誤，請填寫正確格式';
              this.requiredMobile = true;
-             this.disabledSend =true;
+             // this.disabledSend =true;
            }else{
              this.messageMobile = '';
              this.requiredMobile = false;
-             this.disabledSend =false;
+             // this.disabledSend =false;
            } 
         },
         countDown(time){
             if(time == 0){
-                this.disabledSend = false;
+                // this.disabledSend = false;
+                this.isCountDown = false;
                 this.sendBtnTxt = '發送驗證碼簡訊';
             }else{
-                this.disabledSend = true;
+                this.isCountDown = true;
+                // this.disabledSend = true;
                 this.sendBtnTxt = '重新發送（'+time+'S）';
                 time = time -1;
                 setTimeout(() => {
@@ -360,11 +395,13 @@ export default {
         this.overScroll();
     },
     watch:{
-           '$route.params.area':function(value){
-            if(value){
-                this.areaData = areaConfig[value];
-            }
-        },     
+        //    '$route.params.area':function(value){
+        //     if(value){
+        //         console.log($route.params.area);
+        //         this.areaData = areaConfig[value];
+
+        //     }
+        // },     
     }
 }
 

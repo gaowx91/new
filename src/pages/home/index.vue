@@ -81,7 +81,7 @@
                     <h3 class="tit">商品推薦</h3>
                 </div>
                 <div class="mod-card-list">
-                    <v-Cell :to="item.url" v-for="(item,index) in data.gameDetail" :key="index">
+                    <v-Cell :to="{path:item.url,params:{goodsNo:'S01-170922-1721956157'}}" v-for="(item,index) in data.gameDetail" :key="index">
                         <div slot='left' class="cell-left">
                             <img v-lazy="item.img" class="my-avatar">
                         </div>

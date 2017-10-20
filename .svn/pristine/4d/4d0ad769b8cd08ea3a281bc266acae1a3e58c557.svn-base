@@ -1,0 +1,36 @@
+<template>
+    <div class="radio-list" @change="$emit('change', currentValue)">
+        <label class="radio" v-for="(item,index) in options" :key="index">
+            <input type="radio" v-model="currentValue" class="radio-input" :value="item.value" :name="name" />
+            <span class="radio-core"></span>
+            <span class="radio-label" v-text="item.label"></span>
+        </label>
+    </div>
+</template>
+<script>
+require("#/css/components/radio.css")
+export default {
+    props: {
+        value: String,
+        name: String,
+        options: {
+            type: Array,
+            required: true
+        }
+    },
+    data() {
+        return {
+            currentValue: this.value
+        }
+    },
+    watch: {
+        value(val) {
+            this.currentValue = val;
+        },
+        currentValue(val) {
+            this.$emit('input', val);
+        }
+    }
+}
+
+</script>

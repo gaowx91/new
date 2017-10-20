@@ -3,7 +3,7 @@
         <div class="login-main" :class="{'leftshift':state}">
             <mt-header class="login-header">
                 <router-link to="regchoosearea" slot="right">
-                    <mt-button type="primary" class="btn-round">快速註冊</mt-button>
+                    <mt-button type="primary" class="btn-round" @click="FUNCTION.setCookie('isFb','')">快速註冊</mt-button>
                 </router-link>
             </mt-header>
             <v-Content>
@@ -14,7 +14,7 @@
 
                         <v-InputGroup icon='lock' placeholder="請輸入密碼" type="password" v-model="loginPassword" @change="validatePwd" :message="messagePwd" :required="requiredPwd"></v-InputGroup>
 
-                        <v-InputGroup icon='check-shield-sign' other="true" placeholder="輸入驗證碼" v-model="loginCode" @change="validateCode" :message="messageCode" :required="requiredCode"><img :src="codeImg"></v-InputGroup>
+                        <v-InputGroup icon='check-shield-sign' other placeholder="輸入驗證碼" v-model="loginCode" @change="validateCode" :message="messageCode" :required="requiredCode"><img :src="codeImg"></v-InputGroup>
 
                         <div class="login-help">
                             輸入身份證後四碼<span class="text-primary">對應字母</span>，字母請直接輸入
@@ -27,9 +27,13 @@
                     <div class="login-submit">
                         <mt-button type="primary" size="large" @click="login">立即登入</mt-button>
                         <router-link to="">忘記帳密？</router-link>
-                        <router-link to="regfacebooktype">
+                        <!-- <router-link to="regfacebooktype">
                             <mt-button icon="icon mintui-facebook-square" class="btn-round">使用facebook帳號登入</mt-button>
-                        </router-link>
+                        </router-link> -->
+                        
+                         <mt-button icon="icon mintui-facebook-square" class="btn-round" @click="isAuth">使用facebook帳號登入</mt-button>
+                        </a>
+
                     </div>
                 </div>
             </v-Content>
@@ -53,15 +57,17 @@
 import vInputGroup from '@/components/inputgroup/'
 import vContent from '@/components/content'
 import vCheckbox from '@/components/checkbox/'
+import Vue from 'vue'
 require("#/css/passport/user_login.css")
+// require('../../common/facebook.js')
 export default {
     name:'userlogin',
     data() {
         return {
             state: false,
             right: '0',
-            loginUserName:'tw1001',
-            loginPassword:'111111',
+            loginUserName:'',
+            loginPassword:'',
             loginCode:'',
             codeImg: this.CONFIG.CODE,
             messageName:'',
@@ -70,6 +76,7 @@ export default {
             requiredPwd:false,
             messageCode:'',
             requiredCode:false,
+            isFBReady: false
             // paramsData:{
             //     name:'',
             //     pwd:'',
@@ -132,19 +139,70 @@ export default {
                 this.requiredCode = false;
             }
         },
-        // cancel() {
-        //     this.state = false;
-        // },
-        // ok() {
-        //     this.state = true;
-        // },
-        // Mask() {
-        //     this.state = false;
-        // }
+        onFBReady: function () {
+          this.isFBReady = true
+        },
+        isAuth:function(){
+            console.log(FB);
+            console.log(Vue.FB);
+            if(FB){
+               FB.getLoginStatus((response)=> {
+                 console.log(response);
+                  let fbParam={};
+                  if (response.status === 'connected') {//已授权
+                        fbParam.openid=response.authResponse.userID;
+                        fbParam.token=response.authResponse.accessToken;
+                        this.fbLogin(fbParam);
+                  }else {
+                       FB.login((response)=> {//去授权
+                          console.log(response);
+                          if (response.status === 'connected') {//授权后
+                            fbParam.openid=response.authResponse.userID;
+                            fbParam.token=response.authResponse.accessToken;
+                            this.fbLogin(fbParam);
+                          } else {//未授权
+                            
+                          }
+                        });
+                    }
+                })
+            }else{
+                console.log(555);
+                this.Toast('Fackbook is undefined');
+            }
+            
+        },
+        fbLogin(paramsData){
+            this.FUNCTION.setCookie('fb_openid',paramsData.openid);
+            this.FUNCTION.setCookie('fb_token',paramsData.token);
+            this.$http({
+                method: 'POST',
+                url: this.CONFIG.FB_LOGIN, //FaceBook登錄
+                data: this.$qs.stringify(paramsData),
+            }).then(res => {
+                if(res.data.status == true) {
+                    // let userData=res.data.data;
+                    // this.$router.replace('/member');
+                    this.$router.push('/member');
+                }else{
+                    if(res.data.errCode == -210201801){
+                        this.$router.push('/regfacebooktype');
+                    }else{
+                        this.Toast(res.data.info);
+                    }
+                }
+            }).catch(error => {
+                // this.Toast(res.data.info);
+            });
+        },
     },
     mounted() {
         this.overScroll();
-         // console.log(this.CONFIG.CODE);
+        this.isFBReady = Vue.FB != undefined
+        window.addEventListener('fb-sdk-ready', this.onFBReady)
+    },
+    beforeDestroy: function () {
+        window.removeEventListener('fb-sdk-ready', this.onFBReady)
     },
     watch:{
         'userName'(){

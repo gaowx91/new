@@ -4,17 +4,20 @@
             <div class="mod-header reg-header" slot="con">
                 <i class="mintui mintui-back" @click="$router.go(-1)"></i>
                 <div class="title">
-                    快速註冊
+                    企業用戶註冊
                 </div>
             </div>
         </v-Header>
         <v-Content class="reg-content">
             <form class="reg-form">
-                <v-InputGroup icon='user' placeholder="設定登入帳號" v-model="username"></v-InputGroup>
+                <v-InputGroup v-for="(item,index) in inputParams" :key="index" :icon='item.icon' :placeholder="item.placeholder" :message="item.message" :required="item.required" @change="validation(item)" :maxlength="item.maxlength" v-model="postData[item.name]" :toggle="item.toggle" :type="item.type"></v-InputGroup>
+
+               <!--  <v-InputGroup icon='user' placeholder="設定登入帳號" v-model="username"></v-InputGroup>
                 <v-InputGroup icon='lock' placeholder="設定登入密碼" type="password" v-model="pwd"></v-InputGroup>
-                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" toggle="true" payset="true" v-model="paypwd"></v-InputGroup>
+                <v-InputGroup icon='lock' placeholder="輸入支付密碼" type="password" toggle="true" v-model="paypwd"></v-InputGroup> -->
+
                 <div class="reg-submit">
-                    <mt-button type="primary" size="large" @click.prevent="regTwCrop">完成註冊</mt-button>
+                    <mt-button type="primary" size="large" :disabled="nextDisabled" @click.prevent="regTwCrop">完成註冊</mt-button>
                     <div class="reg-agree">
                         點擊視為同意
                         <router-link to="" class="text-info">《服務條款》</router-link>
@@ -34,10 +37,41 @@ import vHeader from '@/components/header'
 export default {
     data() {
         return {
-            username: '',
-            pwd: '',
-            paypwd: '',
-            baseData:this.$route.query,
+            postData:{
+                username: '',
+                pwd: '',
+                paypwd: '',
+            },
+            // baseData:this.$route.query,
+            inputParams:[
+                {
+                  name:'username',
+                  icon:'user',  
+                  placeholder:'設定登入帳號',  
+                  message:'帳號以英文字母開頭，由字母數字組成，長度為6-16個字元',  
+                  required:false, 
+                  maxlength:16,
+                },
+                {
+                  name:'pwd',
+                  icon:'lock',  
+                  placeholder:'設定登入密碼',  
+                  message:'密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位',  
+                  required:false, 
+                  type:'password',
+                  maxlength:16,
+                },
+                {
+                  name:'paypwd',
+                  icon:'lock',  
+                  placeholder:'輸入支付密碼',  
+                  message:'輸入支付密碼',  
+                  required:false, 
+                  toggle:true,
+                  type:'password',
+                  maxlength:16,
+                },
+            ],
         }
     },
     components: {
@@ -45,22 +79,53 @@ export default {
         vInputGroup,
         vCheckbox,vHeader
     },
-    created(){
-        // console.log(this.$route.query);
-        console.log(this.baseData);
-    },
-    methods:{
+    methods:{ 
+        validation(item){
+            let obj = {
+                'username':() =>{
+                    let reg = /^[a-zA-Z][a-zA-Z0-9]{5,15}$/;
+                    if(reg.test(this.postData.username)){
+                        // item.message = '帳號以英文字母開頭，由字母數字組成，長度為6-16個字元';
+                        item.required =false;
+                    }else{
+                        // item.message = '帳號格式不符合要求';
+                        item.required =true;
+                    }
+                },
+                'pwd':() =>{
+                    let reg = this.FUNCTION.pwd;
+                    if(reg.test(this.postData.pwd)){
+                        // item.message = '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位';
+                        item.required =false;
+                    }else{
+                        // item.message = '密碼設置不符合要求';
+                        item.required =true;
+                    }
+                },
+                'paypwd':() =>{
+                    let reg = this.FUNCTION.pwd;
+                    if(this.postData.paypwd== '' || reg.test(this.postData.paypwd)){
+                        item.message = '密码由字母、数字、符号（除空格）至少两种以上组成，长度为6-16位';
+                        item.required =false;
+                    }else{
+                        item.message = '密碼設置不符合要求';
+                        item.required =true;//错误
+                    }
+                },
+            };
+            (obj[item.name])();
+        },
         regTwCrop(){
             let paramsData={
-                username:this.username,
-                pwd:this.pwd,
-                paypwd:this.paypwd ? this.paypwd : this.pwd,
-                realname:this.baseData.realname,
-                idcard:this.baseData.idcard,
-                mobile:this.baseData.mobile,
-                code:this.baseData.code,
-                cropname:this.baseData.cropname,
-                cropno:this.baseData.cropno,
+                username:this.postData.username,
+                pwd:this.postData.pwd,
+                paypwd:this.postData.paypwd ? this.postData.paypwd : this.postData.pwd,
+                realname:this.postData.realname,
+                idcard:this.postData.idcard,
+                mobile:this.postData.mobile,
+                code:this.postData.code,
+                cropname:this.postData.cropname,
+                cropno:this.postData.cropno,
             }
             this.$http({
                 method: 'post',
@@ -78,13 +143,31 @@ export default {
             });
         },
     },
+    computed:{
+        nextDisabled:function(){
+            if(this.postData.username.length == 0){
+                return true;
+            }
+            if(this.postData.pwd.length == 0){
+                return true;
+            }
+            for(let key in this.inputParams){//
+                if(this.inputParams[key].required){
+                    return true;
+                }
+            }
+            return false;
+        },
+    },
     mounted(){
         this.overScroll();
+        Object.assign(this.postData,this.$route.query);
     },
     watch:{
         '$route.query'(value){
             if(value){
-                Object.assign(this.baseData,value);
+                Object.assign(this.postData,value);
+                // Object.assign(this.baseData,value);
             }
         }
     }

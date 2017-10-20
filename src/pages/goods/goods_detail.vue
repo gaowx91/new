@@ -123,6 +123,7 @@ export default {
             this.accountP = accountP
         },
         imgSlideChange(e, swipe) {
+            console.log(e,swipe);
             this.isImgViewsShow = 1;
             this.mask = true;
             this.isIndex = parseInt(e.currentTarget.getAttribute("is-active"))
